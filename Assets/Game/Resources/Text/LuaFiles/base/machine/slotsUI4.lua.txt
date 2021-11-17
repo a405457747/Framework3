@@ -1,25 +1,25 @@
 -------------------------------------------------------
--- author : sky_allen                                                                                                                  
---  email : 894982165@qq.com      
---   time : 2021/10/14 16:52:15                                                                                           
+-- author : sky_allen
+--  email : 894982165@qq.com
+--   time : 2021/10/14 16:52:15
 -------------------------------------------------------
 
----@class slotsUI3
-local slotsUI3 = class('slotsUI3', require("base.uiMachine"))
+---@class slotsUI4
+local slotsUI4 = class('slotsUI4', require("base.machine.slotsUI3"))
 
-function slotsUI3:ctor(lv)
-    slotsUI3.super.ctor(self, lv)
+function slotsUI4:ctor(lv)
+    slotsUI4.super.ctor(self, lv)
 end
 
-function slotsUI3:spinStart()
-    slotsUI3.super.spinStart(self);
+function slotsUI4:spinStart()
+    slotsUI4.super.spinStart(self);
 end
 
-function slotsUI3:spinOver()
-    slotsUI3.super.spinOver(self);
+function slotsUI4:spinOver()
+    slotsUI4.super.spinOver(self);
 end
 
-function slotsUI3:initWheels()
+function slotsUI4:initWheels()
 
     local luaMonos = array2table(self.go.transform:Find("Image/Image"), RectTransform, false);
     self.wheels = {};
@@ -29,15 +29,14 @@ function slotsUI3:initWheels()
     for i, v in ipairs(luaMonos) do
         local mono = v:GetComponent(typeof(CS.LuaMono));
         table.insert(self.wheels, mono.TableIns);
-        local samePart = { "w3", "w4" };
         local SPPoolPart = nil;
         if i == 1 then
-            SPPoolPart = self:partSPPoolRemoveSome(allSprites, samePart)
+            SPPoolPart = self:partSPPoolRemoveSome(allSprites, {})
             self.SPPoolPartCommom = table.selectItems(table.copy(SPPoolPart), "name");
         elseif i == 2 then
             SPPoolPart = self:partSPPoolRemoveSome(allSprites, {})
         elseif i == 3 then
-            SPPoolPart = self:partSPPoolRemoveSome(allSprites, samePart)
+            SPPoolPart = self:partSPPoolRemoveSome(allSprites, {})
         end
 
         self.wheels[i]:init(SPPoolPart);
@@ -46,120 +45,42 @@ function slotsUI3:initWheels()
     self.reSpinGo = self.go.transform:Find("Image/ReSpin").gameObject;
 end
 
-function slotsUI3:quickPatterns()
-    return {
-        { "w2", "w3", "em" },
-        { "em", "w4", "em" },
-        { "b1", "b1", "b3" },
-    };
-end
---[[        if totalBet == 6 or totalBet == 9 or totalBet == 12 then
-            local isRespin = false; --curMachine:isReSpin(nearMissLineTable);--中间那条其实也是nearMiss判断那条
-            if isRespin then
-                coroutine.yield(WaitForSeconds(0.5));
-                self:winShowLightBox(false);
-
-                for i, v in ipairs(self.wheels) do
-                    if i ~= curMachine:GetMidRow(matrix) then
-                        self:roll(i, true);
-                    end
-                end
-                coroutine.yield(WaitForSeconds(1))
-                for i, v in ipairs(self.wheels) do
-                    if i ~= curMachine:GetMidRow(matrix) then
-                        self:roll(i, false, self:matrixChange(matrix));
-                    end
-                end
-            end
-        end]]
-
-function slotsUI3:getPartCommon()
-    return table.get_random_item(self.SPPoolPartCommom);
-end
-
-function slotsUI3:ReSpinDataSpecial()
-    local one = nil;
-
-    repeat
-        one = self:getPartCommon();
-    until (one ~= "w2");
-
-    local firstEmpty = math.ratio(0.5);
-
-    if firstEmpty then
-        return "em", one;
+function slotsUI4:getReWindData2(baseNum)
+    local key = nil;
+    if math.ratio(0.5) then
+        key = tostring(baseNum * 2);
+        print("赌赢了是", baseNum * 2);
     else
-        return one, "em";
+        key = tostring(0);
+        print("输了是", 0);
+    end
+    return slotsManage.curMachine:GetRandomWriteDataByKey(key);
+end
+
+function slotsUI4:getReWindData1(baseNum)
+    return slotsManage.curMachine:GetRandomWriteDataByKey(tostring(baseNum));
+end
+
+function slotsUI4:rollAll()
+    local Bets = { 0, 1, 2, 3, 5, 6, 7.5, 10, 12.5, 15, 20, 25, 30, 40, 500 }; --todo 这里是硬编码，如果倍率改了就不对了
+    local smallBet = { 1, 3, 5, 7.5, 10, 12.5, 15, 20 };
+    local bigBet = { 2, 6, 10, 15, 20, 25, 30, 40 }
+
+    assert(table.isSubset(Bets, smallBet));
+    assert(table.isSubset(Bets, bigBet));
+
+    local smallTemp = {}
+    for i, v in ipairs(smallBet) do
+        smallTemp[i] = v * 2;
     end
 
-end
+    assert(table.contentsEqual(smallTemp, bigBet));
 
-function slotsUI3:getReSpinData(baseNum)
-    local special1, special2 = self:ReSpinDataSpecial();
-
-    local t = {
-        ["b"] = {
-            ["1"] = {
-                [1] = {
-                    [1] = 0,
-                    [2] = 0,
-                    [3] = 0,
-                },
-                [2] = {
-                    [1] = 0,
-                    [2] = 1,
-                    [3] = 0,
-                },
-                [3] = {
-                    [1] = 0,
-                    [2] = 0,
-                    [3] = 0,
-                },
-            },
-        },
-        ["a"] = {
-            [1] = {
-                [1] = self:getPartCommon(),
-                [2] = self:getPartCommon(),
-                [3] = self:getPartCommon(),
-            },
-            [2] = {
-                [1] = special1,
-                [2] = "w" .. baseNum,
-                [3] = special2,
-            },
-            [3] = {
-                [1] = self:getPartCommon(),
-                [2] = self:getPartCommon(),
-                [3] = self:getPartCommon(),
-            },
-        },
-        ["c"] = tostring(baseNum),
-    }
-    return t;
-end
-
-function slotsUI3:getReSpinData2(baseSpinData)
-
-    local special1, special2 = self:ReSpinDataSpecial();
-
-    baseSpinData["a"][1][1] = self:getPartCommon();
-    baseSpinData["a"][1][3] = self:getPartCommon();
-
-    baseSpinData["a"][2][1] = special1;
-    baseSpinData["a"][2][3] = special2;
-
-    baseSpinData["a"][3][1] = self:getPartCommon();
-    baseSpinData["a"][3][3] = self:getPartCommon();
-
-    return baseSpinData;
-end
-
-function slotsUI3:rollAll()
     local matrixAboutTemp;
     local curMachine = slotsManage.curMachine;
     local isReSpin = false;
-    local multiplicationNum = 3;--这里模式包括第一次总共多少次呢。
+    local multiplicationNum = 2;--这里模式包括第一次总共多少次呢。
+    local select_bNum = 0;
 
     if not WRITE_DATA_MODE then
         matrixAboutTemp = curMachine:getRandomMatrixAbout();
@@ -168,24 +89,26 @@ function slotsUI3:rollAll()
 
         local ratio = 0.2;
         if RESPIN_QUICK then
+            --这里公用了一个变量但是我认为不要紧的
             ratio = 1;
         end
 
         print(totalBet, "totalBet,,,")
 
         local reSpinJudge = function(bNum)
-            if (totalBet == (bNum * 3)) and math.ratio(ratio) then --这里是3是硬编码哦
+            if (totalBet == (bNum * multiplicationNum)) and math.ratio(ratio) then
                 isReSpin = true;
 
                 if isReSpin then
-                    matrixAboutTemp = self:getReSpinData(bNum);
+                    matrixAboutTemp = self:getReWindData1(bNum);
+                    select_bNum = bNum;
                 end
             end
         end
 
-        reSpinJudge(2);
-        reSpinJudge(3);
-        reSpinJudge(4);
+        for i, v in ipairs(smallBet) do
+            reSpinJudge(v);
+        end
     end
 
     local waitCost = 0.5;
@@ -199,7 +122,7 @@ function slotsUI3:rollAll()
                 slotsManage.R1Change(R1 / 2)
 
                 local matrix = nil;--一直都是直观的
-                local matrixAbout = self:getReSpinData2(matrixAboutTemp);--这个里面保护图案还有其他信息
+                local matrixAbout = matrixAboutTemp;--这个里面保护图案还有其他信息
                 if WRITE_DATA_MODE then
                     local tempMatrix;
                     local count = 0;
@@ -300,19 +223,24 @@ function slotsUI3:rollAll()
                     end)
                 end
             end))
-            self.reSpinGo:SetActive(true);
-            audio.PlaySound("sfx_respin");
-
             coroutine.yield(WaitForSeconds(waitCost));
-            self.reSpinGo:SetActive(false);
+
             for i = 1, (multiplicationNum - 1) do
                 self:stopAllAnimal(); -- 这里停止不冗余了
+
+                self:rewindAnimls();
+                coroutine.yield(WaitForSeconds(RE_WIND_COST));
+                self.reSpinGo:SetActive(true);
+                audio.PlaySound("Music_Replay_Spin");
+                coroutine.yield(WaitForSeconds(waitCost));
+                self.reSpinGo:SetActive(false);
+
                 coroutine.yield(cs_coroutine.start(function()
                     slotsManage.R2Change(R2)--改变时间这里应该对该修改的声音进行重置
                     slotsManage.R1Change(R1 / 2)
 
                     local matrix = nil;--一直都是直观的
-                    local matrixAbout = self:getReSpinData2(matrixAboutTemp);--这个里面保护图案还有其他信息
+                    local matrixAbout = self:getReWindData2(select_bNum);--这个里面保护图案还有其他信息
                     if WRITE_DATA_MODE then
                         local tempMatrix;
                         local count = 0;
@@ -337,12 +265,9 @@ function slotsUI3:rollAll()
                     local nearMiss = (math.ratio(NEAR_MISS_RATIO)) and (curMachine:isNearMiss(nearMissLineTable));
                     local midRow = curMachine:GetMidRow(matrix);
 
-                    audio.PlaySound("Music_Respin");
+                    audio.PlaySound("Music_Replay_Rewind");
                     for i, v in ipairs(self.wheels) do
-                        if i ~= midRow then
-                            self.wheels[i]:showLightBox(true);
-                            self:roll(i, true);
-                        end
+                        self:roll(i, true);
                     end
 
                     coroutine.yield(WaitForSeconds(2))
@@ -351,10 +276,7 @@ function slotsUI3:rollAll()
 
                     for i, v in ipairs(self.wheels) do
 
-                        if i ~= midRow then
-                            self:roll(i, false, self:matrixChange(matrix))
-                            self.wheels[i]:showLightBox(false);
-                        end
+                        self:roll(i, false, self:matrixChange(matrix))
 
                         if i == self:nearMissOffset() then
 
@@ -543,4 +465,4 @@ function slotsUI3:rollAll()
     end)
 end
 
-return slotsUI3
+return slotsUI4

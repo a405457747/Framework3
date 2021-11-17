@@ -59,6 +59,18 @@ function uiMachine:mapPatternsInit()
     self.mapPatterns = self:getMapPatterns();--玩家直观的
 end
 
+function uiMachine:rewindAnimls()
+    local mid = slotsManage.curMachine:fixedMatrixMidRow(self.mapPatterns);
+    for i, v in ipairs(mid) do
+        if i % 2 == 0 then
+            v:rewindAnim(false);
+        else
+            v:rewindAnim(true)
+        end
+
+    end
+end
+
 --中奖线UI的动画
 function uiMachine:lineAnim(index, isOver)
     local line = self.lines[index];

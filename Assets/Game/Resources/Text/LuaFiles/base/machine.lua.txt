@@ -220,6 +220,11 @@ function machine:getWeightItem()
     return res;
 end
 
+function machine:GetRandomWriteDataByKey(key)
+    local res = table.get_random_item(self.writeDatas[key]);
+    return res;
+end
+
 function machine:getRandomMatrixAbout()
     local randomKeys = self:getWeightItem();
     local key = table.get_random_item(randomKeys);
@@ -229,13 +234,7 @@ function machine:getRandomMatrixAbout()
         -- key = "9";
     end
 
-    local res = table.get_random_item(self.writeDatas[key]);
-    --[[    print('-----------start')
-        table.print_arr(randomKeys);
-        print("key", key)
-        table.print_nest_arr(res);
-        print('-----------end')]]
-    return res;
+    return self:GetRandomWriteDataByKey(key);
 end
 
 function machine:GetMidRow(t)
@@ -306,6 +305,15 @@ function machine:knightAward(t, princess, knight)
     local temp = slotsManage.SpritesNameCheck(princess, knight);
 
     if t[1] == knight and t[2] == princess and t[3] == knight then
+        return true;
+    end
+    return false;
+end
+
+function machine:ABCAward(t, a, b, c)
+    assert(#t == 3);
+    slotsManage.SpritesNameCheck(a, b, c);
+    if t[1] == a and t[2] == b and t[3] == c then
         return true;
     end
     return false;

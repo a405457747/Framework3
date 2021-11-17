@@ -165,7 +165,15 @@ function root:Update()
 
 
         -- slotsManage.curMachine:getWeightItem();
-        curtainPanel:fade(nil);
+        -- curtainPanel:fade(nil);
+        local s = 0;
+        local f = function(s)
+            print(s);
+            s = 33;
+            print(s);
+        end
+        f(3);
+        print(s);
     end
 
     for i, v in pairs(systems) do

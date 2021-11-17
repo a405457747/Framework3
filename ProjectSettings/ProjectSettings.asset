@@ -131,7 +131,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.0.35
+  bundleVersion: 0.0.36
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -177,8 +177,8 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.amazon.superwinslots.ClassicSlots
   buildNumber:
-    iPhone: 0.0.35
-  AndroidBundleVersionCode: 35
+    iPhone: 0.0.36
+  AndroidBundleVersionCode: 36
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

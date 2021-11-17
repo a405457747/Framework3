@@ -12,12 +12,26 @@ function guidePanel:init()
     print("guidePanel init")
 end
 
+function guidePanel:show()
+    guidePanel.super.show(self);
+
+   -- print("guidePanel show lv:" .. slotsManage.curMachine.lv);
+    local lv = slotsManage.curMachine.lv;
+    local s = AF:LoadSprite("g" .. lv);
+    self:guideMainImageRefresh(s);
+end
+
 --auto
 
 function guidePanel:ctor(go, tier)
     guidePanel.super.ctor(self, go, tier)
+    self.guideMainImage = self.go.transform:Find("Image/GuideScrollView/Viewport/Content/guideMainImage"):GetComponent('Image');
 
 
+end
+
+function guidePanel:guideMainImageRefresh(t)
+    self.guideMainImage.sprite = t;
 end
 
 return guidePanel

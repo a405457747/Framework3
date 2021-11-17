@@ -4,71 +4,57 @@
 --   time : 2021/10/14 13:36:19                                                                                           
 -------------------------------------------------------
 
----@class slotsMachine3
-local slotsMachine3 = class('slotsMachine3', require("base.machine"))
+---@class slotsMachine4
+local slotsMachine4 = class('slotsMachine4', require("base.machine.slotsMachine3"))
 
-function slotsMachine3:ctor(lv)
-    slotsMachine3.super.ctor(self, lv);
+function slotsMachine4:ctor(lv)
+    slotsMachine4.super.ctor(self, lv);
 end
 
-function slotsMachine3:initMachineUI()
-    slotsMachine3.super.initMachineUI(self);
+function slotsMachine4:initMachineUI()
+    slotsMachine4.super.initMachineUI(self);
 end
 
-function slotsMachine3:spinStart()
-    slotsMachine3.super.spinStart(self)
+function slotsMachine4:spinStart()
+    slotsMachine4.super.spinStart(self)
 end
 
-function slotsMachine3:spinOver()
-    slotsMachine3.super.spinOver(self)
+function slotsMachine4:spinOver()
+    slotsMachine4.super.spinOver(self)
 end
 
-function slotsMachine3:nearMissCheck()
-    local awardPool = { "s2", "w2", "w3", "w4" };
+function slotsMachine4:nearMissCheck()
+    local awardPool = { "s2", "s3", "w2" };
     slotsManage.SpritesNameCheck(awardPool);
     return awardPool;
 end
 
---[[function slotsMachine3:isReSpin(midT)
-    local haveEmpty = false;
-    local wildCount = 0;
-    for i, v in ipairs(midT) do
-        if v == "em" then
-            haveEmpty = true;
-        end
-
-        if string.value_of(v, 1) == "w" then
-            wildCount = wildCount + 1;
-        end
-    end
-
-    return haveEmpty and wildCount == 1;
-end]]
-
-function slotsMachine3:calculateNotWild(v)
+function slotsMachine4:calculateNotWild(v)
     --每一行不是wild的判断中奖
-    if self:allSameAward(v, "s2") then
-        return 25;
-    elseif self:allSameAward(v, "s1") then
-        return 15;
+    if self:allSameAward(v, "s3") then
+        return 20;
     elseif self:allSameAward(v, "s2") then
-        return 12;
-    elseif self:allSameAward(v, "b3") then
+        return 15;
+    elseif self:allSameAward(v, "s1") then
+        return 12.5;
+    elseif self:ABCAward(v, "s3", "s2", "s1") then
         return 10;
+    elseif self:allSameAward(v, "b3") then
+        return 7.5;
     elseif self:allSameAward(v, "b2") then
         return 5;
     elseif self:allSameAward(v, "b1") then
         return 3;
     elseif self:combinationAward(v, { "b1", "s1" }) then
         return 3;
-    elseif self:combinationAward(v, { "b1", "b2", "b3", "s1" }) then
-        return 2;
+    elseif self:combinationAward(v, { "b1", "b2", "b3" }) then
+        return 1;
     else
         return 0;
     end
 end
 
-function slotsMachine3:mainWhetherWinning(finalPatterns, argTableKeys)
+function slotsMachine4:mainWhetherWinning(finalPatterns, argTableKeys)
     --根据图案获得中奖倍率
     local resRatio = {};
     self.winAnimalDic = {};
@@ -96,16 +82,8 @@ function slotsMachine3:mainWhetherWinning(finalPatterns, argTableKeys)
         end
 
         if wildCount > 0 then
-            if self:knightAward(v, "w4", "w2") then
-                ratio = 1000;
-                winAnimalRowFill();
-
-            elseif self:knightAward(v, "w3", "w2") then
-                ratio = 300;
-                winAnimalRowFill();
-
-            elseif self:allSameAward(v, "w2") then
-                ratio = 200;
+            if self:allSameAward(v, "w2") then
+                ratio = 500;
                 winAnimalRowFill();
 
             elseif (wildCount == 1) or (wildCount == 2) then
@@ -118,16 +96,16 @@ function slotsMachine3:mainWhetherWinning(finalPatterns, argTableKeys)
                 if fixedCalculateNotWild ~= 0 then
                     addRatio = fixedCalculateNotWild;
                 else
-                    addRatio = 1;
+                    addRatio = 0;
                 end
 
                 ratio = baseRatio * addRatio;
-                winAnimalRowFill(addRatio == 1);
+                winAnimalRowFill();
 
             else
                 ratio = 0;
                 winAnimalRowFill();
-
+                print("waring:", "什么情况会走这里呢")
             end
         else
             ratio = self:calculateNotWild(v);
@@ -140,4 +118,4 @@ function slotsMachine3:mainWhetherWinning(finalPatterns, argTableKeys)
     return resRatio;
 end
 
-return slotsMachine3
+return slotsMachine4

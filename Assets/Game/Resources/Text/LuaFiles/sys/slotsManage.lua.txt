@@ -15,6 +15,7 @@ local curBet = 0;
 slotsManage.curMachine = nil;
 slotsManage.configEnum = nil;
 local configs = { "S", "M", "L" }
+--todo 100的舍入法可能会有问题在计算方面我感觉。
 
 function slotsManage.init()
     print("slots init")

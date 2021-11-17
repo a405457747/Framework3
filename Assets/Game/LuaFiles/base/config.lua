@@ -41,8 +41,8 @@ CHANEL = ANDROID_CHANEL.Google;
 LANGUAGE_KEY = "English";
 
 QUICK_NEARMISS = false;
-LOAD_QUICK = true;
-LEVEL_CONFIG_TEST = true;
+LOAD_QUICK = false;
+LEVEL_CONFIG_TEST = false;
 GAPBONUS_QUICK = false;
 LOGIN_QUICK = false;
 PATTERNS_QUICK = false;
@@ -50,8 +50,8 @@ LOSE_QUICK = false;
 WRITE_DATA_MODE = false;
 ANALYSIS = false;
 LOCK_QUICK = true;
-LEVEL_QUICK = true;
-RESPIN_QUICK = true;
+LEVEL_QUICK = false;
+RESPIN_QUICK = false;
 CONFIG_KEY_QUICK = false;
 
 R1 = 1.2;--旋转方面的时间
