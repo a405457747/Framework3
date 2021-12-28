@@ -63,6 +63,18 @@ public class BreadMakerSystem : GameSystem
         }*/
         times = new List<double>()
         {
+                // 10,
+                // 30,
+                // 100,
+                // 200,
+                // 501,
+                // 502,
+                // 503,
+                // 504,
+                // 505,
+                // 506,
+
+
             TimeHelper.Minute * 30,
             TimeHelper.Hour * 12,
             TimeHelper.Day,
@@ -73,6 +85,7 @@ public class BreadMakerSystem : GameSystem
             TimeHelper.Month,
             TimeHelper.Month * 3,
             TimeHelper.Month * 6,
+
         };
         Assert.IsTrue(times.Count == 10);
 
@@ -85,7 +98,7 @@ public class BreadMakerSystem : GameSystem
         {
             WriteExcel(DataPath, false);
         }
-        
+
         ReadExcel(DataPath);
 
         InvokeRepeating(nameof(SendPer), 0f, 1f);
@@ -171,9 +184,13 @@ public class BreadMakerSystem : GameSystem
     {
         Application.OpenURL(TargetDir);
     }
+    UTF8Encoding utf8 = new UTF8Encoding(false);
+
 
     void ReadExcel(string path)
     {
+
+
         try
         {
             var fileStr = File.ReadAllText(path, Encoding.UTF8);
@@ -368,7 +385,7 @@ public class BreadMakerSystem : GameSystem
         }
     }
 
-//auto
+    //auto
     private void Awake()
     {
         Incident.DeleteEvent<BtnClickEvent>(BtnClickEventCallback);
