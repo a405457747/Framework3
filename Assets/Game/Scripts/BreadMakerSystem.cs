@@ -61,20 +61,28 @@ public class BreadMakerSystem : GameSystem
                 TimeHelper.Month * 6,
             };
         }*/
+        /*        times = new List<double>()
+                {
+                    TimeHelper.Minute * 30,
+                    TimeHelper.Hour * 12,
+                    TimeHelper.Day,
+                    TimeHelper.Day * 2,
+                    TimeHelper.Day * 4,
+                    TimeHelper.Day * 7,
+                    TimeHelper.Day * 15,
+                    TimeHelper.Month,
+                    TimeHelper.Month * 3,
+                    TimeHelper.Month * 6,
+                };*/
+
         times = new List<double>()
         {
-            TimeHelper.Minute * 30,
-            TimeHelper.Hour * 12,
             TimeHelper.Day,
-            TimeHelper.Day * 2,
-            TimeHelper.Day * 4,
-            TimeHelper.Day * 7,
-            TimeHelper.Day * 15,
-            TimeHelper.Month,
-            TimeHelper.Month * 3,
-            TimeHelper.Month * 6,
+            TimeHelper.Day * 10,
+            TimeHelper.Day * 30,
+            TimeHelper.Day * 60,
         };
-        Assert.IsTrue(times.Count == 10);
+        Assert.IsTrue(times.Count ==4);
 
         if (Directory.Exists(TargetDir) == false)
         {
@@ -85,7 +93,7 @@ public class BreadMakerSystem : GameSystem
         {
             WriteExcel(DataPath, false);
         }
-        
+
         ReadExcel(DataPath);
 
         InvokeRepeating(nameof(SendPer), 0f, 1f);
@@ -368,7 +376,7 @@ public class BreadMakerSystem : GameSystem
         }
     }
 
-//auto
+    //auto
     private void Awake()
     {
         Incident.DeleteEvent<BtnClickEvent>(BtnClickEventCallback);
